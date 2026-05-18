@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malika Thabina Hidayat | Junior Web Developer</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Dark Mode colors */
+            --bg: #080810;
+            --bg2: #0e0e1c;
+            --gold: #c9a84c;
+            --cyan: #00d4ff;
+            --text: #f0f0f0;
+            --muted: #8a8a9a;
+            --card: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.05);
+
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'DM Sans', sans-serif;
+            --ease: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Light Mode colors */
+        [data-theme="light"] {
+            --bg: #faf8f3;
+            --bg2: #f0ece0;
+            --gold: #a8762a;
+            --cyan: #0099cc;
+            --text: #1a1a2e;
+            --muted: #5a5a6a;
+            --card: rgba(0, 0, 0, 0.04);
+            --border: rgba(0, 0, 0, 0.08);
+        }
+
+        /* --- Global Resets & Transitions --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            cursor: none;
+            transition: background-color var(--ease), color var(--ease);
+        }
+
+        /* Apply transition to all changing color elements */
+        .card,
+        nav,
+        .btn,
+        .progress-ring .bg,
+        .contact-container,
+        .input-group input,
+        .input-group textarea,
+        .social-icon,
+        .skill-icon,
+        .hamburger span,
+        .ring-1,
+        .ring-2 {
+            transition: all var(--ease);
+        }
+
+        ::selection {
+            background: var(--cyan);
+            color: #fff;
+        }
+
+        a,
+        button,
+        input,
+        textarea {
+            font-family: inherit;
+            cursor: none;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        section {
+            padding: 100px 5%;
+            max-width: 1300px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* --- Custom Cursor --- */
+        .cursor-dot,
+        .cursor-ring {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+        }
+
+        .cursor-ring {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--cyan);
+            transition: width 0.2s, height 0.2s, border-color 0.2s, background 0.2s;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                cursor: auto;
+            }
+
+            a,
+            button,
+            input,
+            textarea,
+            .theme-toggle,
+            .hamburger {
+                cursor: pointer;
+            }
+
+            .cursor-dot,
+            .cursor-ring {
+                display: none !important;
+            }
+        }
+
+        /* --- Loading Screen --- */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-name {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: var(--gold);
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            animation: pulse 1s infinite alternate;
+        }
+
+        .progress-container {
+            width: 220px;
+            height: 3px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--cyan);
+            transition: width 1.3s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        /* --- Navbar --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 25px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.4s;
+        }
+
+        nav.scrolled {
+            backdrop-filter: blur(12px);
+            padding: 15px 5%;
+            border-bottom: 1px solid var(--border);
+            background: rgba(8, 8, 16, 0.85);
+        }
+
+        [data-theme="light"] nav.scrolled {
+            background: rgba(250, 248, 243, 0.85);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--gold);
+            letter-spacing: 1px;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            position: relative;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--cyan);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            fill: var(--text);
+            transition: fill 0.3s;
+        }
+
+        .theme-toggle:hover {
+            fill: var(--gold);
+            transform: scale(1.1);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 2000;
+            margin-left: 20px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--text);
+            transition: 0.3s;
+        }
+
+        /* --- Hero Section --- */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #hero-particles {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: 0.7;
+        }
+
+        .shape {
+            position: absolute;
+            filter: blur(60px);
+            z-index: -2;
+            border-radius: 50%;
+            opacity: 0.2;
+        }
+
+        [data-theme="light"] .shape {
+            opacity: 0.1;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--cyan);
+            top: 10%;
+            left: 10%;
+            animation: float 10s infinite alternate;
+        }
+
+        .shape-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--gold);
+            bottom: 10%;
+            right: 10%;
+            animation: float 15s infinite alternate-reverse;
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            z-index: 1;
+            margin-top: 40px;
+        }
+
+        .hero-image {
+            position: relative;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-img {
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            object-fit: cover;
+            z-index: 2;
+            border: 4px solid var(--bg2);
+            filter: contrast(1.1);
+        }
+
+        .ring-1,
+        .ring-2 {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px dashed transparent;
+        }
+
+        .ring-1 {
+            width: 290px;
+            height: 290px;
+            border-color: var(--gold);
+            animation: rotate 20s linear infinite;
+        }
+
+        .ring-2 {
+            width: 320px;
+            height: 320px;
+            border-color: var(--cyan);
+            animation: rotate-reverse 25s linear infinite;
+        }
+
+        .glitch-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .glitch {
+            font-size: 4rem;
+            color: var(--text);
+            position: relative;
+            display: inline-block;
+            line-height: 1.1;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--muted);
+            margin-bottom: 40px;
+            min-height: 2.2rem;
+        }
+
+        .typewriter {
+            color: var(--cyan);
+            border-right: 2px solid var(--cyan);
+            padding-right: 5px;
+            animation: blink 0.8s infinite;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 35px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: #fff;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: 0.3s;
+            z-index: -1;
+        }
+
+        .btn-primary:hover::before {
+            left: 0;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 20px rgba(201, 168, 76, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid var(--text);
+        }
+
+        .btn-outline:hover {
+            background: var(--text);
+            color: var(--bg);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .btn-cert {
+            background: transparent;
+            color: var(--cyan);
+            border: 2px solid var(--cyan);
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .btn-cert:hover {
+            background: var(--cyan);
+            color: #fff;
+            box-shadow: 0 0 22px rgba(0, 212, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .btn-cert .drive-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            transition: transform 0.3s;
+        }
+
+        .btn-cert:hover .drive-icon {
+            transform: scale(1.15) rotate(-6deg);
+        }
+
+        /* --- Sections Shared --- */
+        .section-title {
+            font-size: 2.8rem;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .section-title span {
+            color: var(--gold);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--cyan);
+            margin: 20px auto 0;
+        }
+
+        /* --- About Section --- */
+        .about-container {
+            display: flex;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .about-img-wrap {
+            flex: 1;
+            position: relative;
+            padding: 20px;
+        }
+
+        .about-img {
+            width: 100%;
+            border-radius: 12px;
+            z-index: 2;
+            position: relative;
+            filter: grayscale(10%) contrast(1.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .about-frame {
+            position: absolute;
+            inset: 0;
+            border: 2px solid var(--gold);
+            border-radius: 12px;
+            z-index: 1;
+            transform: translate(20px, 20px);
+            transition: 0.4s ease;
+        }
+
+        .about-img-wrap:hover .about-frame {
+            transform: translate(10px, 10px);
+        }
+
+        .about-text {
+            flex: 1.2;
+        }
+
+        .about-text p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--muted);
+            margin-bottom: 25px;
+        }
+
+
+
+        /* --- Skills Section --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 30px;
+        }
+
+        .skill-card {
+            background: var(--card);
+            padding: 40px 20px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-12px);
+            border-color: var(--gold);
+            box-shadow: 0 15px 35px rgba(201, 168, 76, 0.1);
+        }
+
+        .skill-icon {
+            width: 45px;
+            height: 45px;
+            fill: var(--text);
+            margin-bottom: 25px;
+            transition: 0.3s;
+            opacity: 0.8;
+        }
+
+        .skill-card:hover .skill-icon {
+            fill: var(--cyan);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .skill-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-ring {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .progress-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: transparent;
+            stroke-width: 6;
+            stroke-linecap: round;
+        }
+
+        .progress-ring .bg {
+            stroke: var(--border);
+        }
+
+        .progress-ring .fg {
+            stroke: var(--cyan);
+            stroke-dasharray: 219.9;
+            stroke-dashoffset: 219.9;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.1, 0.7, 0.1, 1);
+        }
+
+        .skill-card:hover .progress-ring .fg {
+            stroke: var(--gold);
+        }
+
+        /* --- Certificates Section --- */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .cert-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 35px 30px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+
+        .cert-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transform: skewX(-20deg);
+            transition: 0.6s;
+        }
+
+        [data-theme="light"] .cert-card::before {
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.05), transparent);
+        }
+
+        .cert-card:hover::before {
+            left: 150%;
+        }
+
+        .cert-card:hover {
+            border-color: var(--cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.05);
+        }
+
+        .cert-icon {
+            width: 45px;
+            height: 45px;
+            fill: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .cert-title {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--text);
+        }
+
+        .cert-org {
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        .cert-year {
+            font-size: 0.8rem;
+            color: var(--cyan);
+            margin-top: 20px;
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* --- Projects Section --- */
+        .projects-container {
+            display: flex;
+            gap: 40px;
+            overflow-x: auto;
+            padding: 20px 0 60px;
+            scroll-behavior: auto;
+            cursor: grab;
+            align-items: stretch;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .projects-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .projects-container:active {
+            cursor: grabbing;
+        }
+
+        .project-card {
+            min-width: 450px;
+            height: 350px;
+            border-radius: 16px;
+            background-size: cover;
+            background-position: center;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            transition: transform 0.4s;
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, var(--bg) 10%, rgba(8, 8, 16, 0.3) 100%);
+            transition: 0.4s;
+        }
+
+        [data-theme="light"] .project-card::after {
+            background: linear-gradient(to top, var(--bg) 10%, rgba(0, 0, 0, 0.1) 100%);
+        }
+
+        .project-card:hover {
+            transform: scale(0.98);
+        }
+
+        .project-card:hover::after {
+            background: linear-gradient(to top, var(--bg) 30%, rgba(8, 8, 16, 0.6) 100%);
+        }
+
+        .project-info {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            width: 50%;
+            padding: 40px;
+            z-index: 2;
+            transition: 0.4s ease-out;
+        }
+
+        .project-card:hover .project-info {
+            bottom: 0;
+        }
+
+        /* Project text stays light/visible even in light mode due to dark overlay over image */
+        .project-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--text);
+            font-family: var(--font-heading);
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .project-tag {
+            font-size: 0.8rem;
+            padding: 5px 12px;
+            background: var(--card);
+            backdrop-filter: blur(5px);
+            border-radius: 4px;
+            color: var(--cyan);
+            font-weight: 500;
+            border: 1px solid var(--border);
+        }
+
+        .project-link {
+            display: inline-block;
+            color: var(--gold);
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: 0.4s;
+            text-shadow: 0 0 10px transparent;
+        }
+
+        .project-card:hover .project-link {
+            opacity: 1;
+            margin-top: 10px;
+            text-shadow: 0 0 15px rgba(201, 168, 76, 0.5);
+        }
+
+        /* --- Contact Section --- */
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg2);
+            border-radius: 20px;
+            padding: 60px;
+            border: 1px solid var(--border);
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-container::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 22px;
+            background: linear-gradient(45deg, var(--gold), var(--cyan), transparent);
+            z-index: -1;
+            opacity: 0.3;
+            filter: blur(8px);
+            transition: 0.5s;
+        }
+
+        .contact-container:hover::before {
+            opacity: 0.6;
+            filter: blur(12px);
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .social-icon {
+            width: 55px;
+            height: 55px;
+            background: var(--card);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s;
+            border: 1px solid var(--border);
+            fill: var(--text);
+        }
+
+        .social-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .social-icon:hover {
+            background: transparent;
+            border-color: var(--cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.1);
+            fill: var(--cyan);
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            padding: 15px 0;
+            color: var(--text);
+            font-size: 1.05rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            color: var(--muted);
+            pointer-events: none;
+            transition: 0.3s;
+            font-size: 1.05rem;
+        }
+
+        .input-group input:focus~label,
+        .input-group input:valid~label,
+        .input-group textarea:focus~label,
+        .input-group textarea:valid~label {
+            top: -15px;
+            font-size: 0.85rem;
+            color: var(--cyan);
+            font-weight: 500;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            border-bottom-color: var(--cyan);
+        }
+
+        .contact-btn {
+            align-self: center;
+            margin-top: 10px;
+            border: none;
+            background: linear-gradient(45deg, var(--gold), #debb5d);
+            color: #fff;
+            padding: 16px 50px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            box-shadow: 0 5px 20px rgba(201, 168, 76, 0.3);
+            transition: 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(201, 168, 76, 0.5);
+        }
+
+        .contact-btn:active {
+            animation: pulse-btn 0.5s;
+        }
+
+        @keyframes pulse-btn {
+            0% {
+                box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.5);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(201, 168, 76, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(201, 168, 76, 0);
+            }
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 50px 0;
+            font-size: 0.95rem;
+            color: var(--muted);
+            margin-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-divider {
+            width: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            margin: 0 auto 30px;
+            transition: width 1.5s ease;
+        }
+
+        .footer-divider.visible {
+            width: 200px;
+        }
+
+        /* --- Animations & Utilities --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+
+            100% {
+                transform: translateY(60px) scale(1.1);
+            }
+        }
+
+        @keyframes pulse {
+            from {
+                opacity: 0.7;
+                transform: scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1.02);
+            }
+        }
+
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes rotate-reverse {
+            100% {
+                transform: rotate(-360deg);
+            }
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 900px) {
+            .glitch {
+                font-size: 3rem;
+            }
+
+            .profile-img {
+                width: 220px;
+                height: 220px;
+            }
+
+            .ring-1 {
+                width: 250px;
+                height: 250px;
+            }
+
+            .ring-2 {
+                width: 280px;
+                height: 280px;
+            }
+
+            .about-container {
+                flex-direction: column;
+                gap: 50px;
+            }
+
+
+
+            .project-card {
+                min-width: 320px;
+                height: 400px;
+            }
+
+            .nav-controls {
+                flex-direction: row-reverse;
+            }
+
+            /* Hamburger on right, moon on left */
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 260px;
+                background: var(--bg2);
+                border-left: 1px solid var(--border);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 40px;
+                transition: 0.4s ease;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .hamburger {
+                display: flex;
+                cursor: pointer;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: translateY(7px) rotate(45deg);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: translateY(-7px) rotate(-45deg);
+            }
+
+            .contact-container {
+                padding: 40px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="loader-name">THABINA</div>
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav>
+        <div class="nav-controls">
+            <div class="theme-toggle hover-target" id="theme-btn" title="Toggle Theme">
+                <!-- Moon Icon -->
+                <svg class="icon-moon" viewBox="0 0 384 512">
+                    <path
+                        d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4 5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6-96.9 0-175.5-78.8-175.5-176 0-65.8 36-123.1 89.3-153.3 6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z" />
+                </svg>
+                <!-- Sun Icon (hidden by default) -->
+                <svg class="icon-sun" style="display:none;" viewBox="0 0 512 512">
+                    <path
+                        d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1l90.3-62.3c4.5-3.1 10.2-3.7 15.2-1.6zM256 160A96 96 0 1 0 256 352a96 96 0 1 0 0-192z" />
+                </svg>
+            </div>
+            <div class="hamburger hover-target">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#hero" class="hover-target">Home</a></li>
+            <li><a href="#about" class="hover-target">About</a></li>
+            <li><a href="#skills" class="hover-target">Skills</a></li>
+            <li><a href="#projects" class="hover-target">Projects</a></li>
+            <li><a href="#contact" class="hover-target">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <canvas id="hero-particles"></canvas>
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+
+        <div class="hero-content reveal">
+            <div class="hero-image">
+                <div class="ring-1"></div>
+                <div class="ring-2"></div>
+                <img src="profil.jpg" alt="Malika Thabina Hidayat" class="profile-img hover-target">
+            </div>
+            <div class="hero-text">
+                <div class="glitch-wrapper">
+                    <h1 class="glitch" data-text="Malika Thabina Hidayat">Malika Thabina Hidayat</h1>
+                </div>
+                <div class="subtitle"><span class="typewriter"></span></div>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary hover-target">View Projects</a>
+                    <a href="CV.PKL (2).pdf" class="btn btn-outline hover-target">View CV</a>
+                    <a href="https://drive.google.com/drive/folders/1bBfgVz_UtJ7TkHY9Sg17qw-k2VM0d8z5" target="_blank" class="btn btn-cert hover-target">
+                        <svg class="drive-icon" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+                            <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+                            <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/>
+                            <path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/>
+                            <path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+                            <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
+                            <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 27h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
+                        </svg>
+                       View Certificates 
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- About Section -->
+    <section id="about">
+        <h2 class="section-title reveal"><span>About Me</span></h2>
+        <div class="about-container">
+            <div class="about-img-wrap reveal">
+                <div class="about-frame"></div>
+                <!-- Developer lifestyle placeholder image -->
+                <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=800&q=80"
+                    alt="Code on Screen" class="about-img">
+            </div>
+            <div class="about-text reveal">
+                <p>Hello! I'm Malika — A Junior Web Developer with a genuine passion for building clean, interactive, and responsive digital experiences. I believe great web development lies in a combination of strong technical fundamentals and thoughtful design, and I strive to bring both to every project I work on.</p>
+
+<p>Besides coding, I'm a photographer who enjoys capturing the beauty of the world through my lens a creative eye that naturally influences my approach to UI and visual design. I'm also deeply interested in the world of data: analyzing patterns, uncovering insights, and turning raw numbers into meaningful stories. Whether it's a web project or a data dashboard, I'm always looking for elegant and useful solutions.</p>
+
+<p>I'm constantly developing my skills across a variety of web technologies and data tools, driven by curiosity and a commitment to my craft. Every project is a new opportunity to learn, improve, and produce something I'm proud of.</p>
+</div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills">
+        <h2 class="section-title reveal"My><span> Skills</span></h2>
+
+        <div class="skills-grid desktop reveal">
+            <div class="skill-card hover-target">
+                <!-- HTML5 Icon -->
+                <svg class="skill-icon" viewBox="0 0 384 512">
+                    <path
+                        d="M0 32l34.9 395.8L191.5 480l157.6-52.2L384 32H0zm308.2 127.9H124.4l4.1 49.4h175.6l-13.6 148.4-97.9 27v.3h-1.1l-98.7-27.3-6-75.8h47.7L138 320l53.5 14.5 53.7-14.5 6-62.2H84.3L71.5 112.2h241.1l-4.4 47.7z" />
+                </svg>
+                <div class="skill-name">HTML5</div>
+                <div class="progress-ring">
+                    <svg viewBox="0 0 80 80">
+                        <circle class="bg" cx="40" cy="40" r="35" />
+                        <circle class="fg progress-ring-circle" cx="40" cy="40" r="35" data-percent="85" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="skill-card hover-target">
+                <!-- CSS3 Icon -->
+                <svg class="skill-icon" viewBox="0 0 384 512">
+                    <path
+                        d="M0 32l34.9 395.8L191.5 480l157.6-52.2L384 32H0zm308.2 127.9H124.4l4.1 49.4h175.6l-13.6 148.4-97.9 27v.3h-1.1l-98.7-27.3-6-75.8h47.7L138 320l53.5 14.5 53.7-14.5 6-62.2H84.3L71.5 112.2h241.1l-4.4 47.7z" />
+                </svg>
+                <div class="skill-name">CSS3</div>
+                <div class="progress-ring">
+                    <svg viewBox="0 0 80 80">
+                        <circle class="bg" cx="40" cy="40" r="35" />
+                        <circle class="fg progress-ring-circle" cx="40" cy="40" r="35" data-percent="85" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="skill-card hover-target">
+                <!-- JS Icon -->
+                <svg class="skill-icon" viewBox="0 0 448 512">
+                    <path
+                        d="M0 32v448h448V32H0zm243.8 349.4c0 43.6-25.6 63.5-62.9 63.5-33.7 0-53.2-17.4-63.2-38.5l34.3-20.7c6.6 11.7 12.6 21.6 27.1 21.6 13.8 0 22.6-5.4 22.6-26.5V237.7h42.1v143.7zm99.6 63.5c-39.1 0-64.4-18.6-76.7-43l34.3-19.8c9 14.7 20.8 25.6 41.5 25.6 17.4 0 28.6-8.7 28.6-20.8 0-14.4-11.4-19.5-30.7-28l-10.5-4.5c-30.4-12.9-50.5-29.2-50.5-63.5 0-31.6 24.1-55.6 61.6-55.6 26.8 0 46 9.3 59.8 33.7L368 290c-7.2-12.9-15-18-27.1-18-12.3 0-20.1 7.8-20.1 18 0 12.6 7.8 17.7 25.9 25.6l10.5 4.5c35.8 15.3 55.9 31 55.9 66.2 0 37.8-29.8 58.6-69.7 58.6z" />
+                </svg>
+                <div class="skill-name">JavaScript</div>
+                <div class="progress-ring">
+                    <svg viewBox="0 0 80 80">
+                        <circle class="bg" cx="40" cy="40" r="35" />
+                        <circle class="fg progress-ring-circle" cx="40" cy="40" r="35" data-percent="75" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="skill-card hover-target">
+                <!-- Responsive Design Icon (Devices) -->
+                <svg class="skill-icon" viewBox="0 0 512 512">
+                    <path
+                        d="M464 48H48C21.5 48 0 69.5 0 96v224c0 26.5 21.5 48 48 48h144v64h-32c-17.7 0-32 14.3-32 32s14.3 32 32 32h192c17.7 0 32-14.3 32-32s-14.3-32-32-32h-32v-64h144c26.5 0 48-21.5 48-48V96c0-26.5-21.5-48-48-48zm-16 256H64V112h384v192zM320 256H192c-8.8 0-16-7.2-16-16v-64c0-8.8 7.2-16 16-16h128c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16z" />
+                </svg>
+                <div class="skill-name">Responsive Design</div>
+                <div class="progress-ring">
+                    <svg viewBox="0 0 80 80">
+                        <circle class="bg" cx="40" cy="40" r="35" />
+                        <circle class="fg progress-ring-circle" cx="40" cy="40" r="35" data-percent="75" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="skill-card hover-target">
+                <!-- Git/Github Icon -->
+                <svg class="skill-icon" viewBox="0 0 448 512">
+                    <path
+                        d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z" />
+                </svg>
+                <div class="skill-name">Git & GitHub</div>
+                <div class="progress-ring">
+                    <svg viewBox="0 0 80 80">
+                        <circle class="bg" cx="40" cy="40" r="35" />
+                        <circle class="fg progress-ring-circle" cx="40" cy="40" r="35" data-percent="80" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="skill-card hover-target">
+                <!-- VS Code / Editor Icon using code brackets -->
+                <svg class="skill-icon" viewBox="0 0 640 512">
+                    <path
+                        d="M208 416c-8.19 0-16.38-3.12-22.63-9.37l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L93.25 224l137.38 137.38c12.5 12.5 12.5 32.75 0 45.25-6.25 6.24-14.44 9.37-22.63 9.37zm224 0c-8.19 0-16.38-3.12-22.63-9.37-12.5-12.5-12.5-32.75 0-45.25L546.75 224 409.38 86.62c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160c-6.25 6.25-14.44 9.38-22.63 9.38z" />
+                </svg>
+                <div class="skill-name">VS Code</div>
+                <div class="progress-ring">
+                    <svg viewBox="0 0 80 80">
+                        <circle class="bg" cx="40" cy="40" r="35" />
+                        <circle class="fg progress-ring-circle" cx="40" cy="40" r="35" data-percent="80" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Data Analyst -->
+            <div class="skill-card hover-target">
+                <svg class="skill-icon" viewBox="0 0 448 512">
+                    <path d="M160 80c0-26.5 21.5-48 48-48h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V80zM0 272c0-26.5 21.5-48 48-48H80c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V272zM368 96h32c26.5 0 48 21.5 48 48V432c0 26.5-21.5 48-48 48H368c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48z"/>
+                </svg>
+                <div class="skill-name">Data Analyst</div>
+                <div class="progress-ring">
+                    <svg viewBox="0 0 80 80">
+                        <circle class="bg" cx="40" cy="40" r="35" />
+                        <circle class="fg progress-ring-circle" cx="40" cy="40" r="35" data-percent="70" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Microsoft Word -->
+            <div class="skill-card hover-target">
+                <svg class="skill-icon" viewBox="0 0 384 512">
+                    <path d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm55 241.1c-3.8-12.7-7.3-26.2-9.9-38.1h-.6c-2.1 11.9-5.2 25.4-8.6 38.1L90 288H64l-26-96h24.2l9.3 43.6c2.6 12.3 5 24.7 6.7 35.7h.5c2-11.1 5.1-23.9 8.4-35.9l11.6-43.4h22.7l10.7 44.3c2.6 11.1 5.3 23.4 7.1 35h.5c1.9-11.6 4.4-23.9 7.1-35.7l10.3-43.6H198l-27.9 96H145l-26-46.9zM258 336H198v-16h60v16zm0-48H198v-16h60v16z"/>
+                </svg>
+                <div class="skill-name">Microsoft Word</div>
+                <div class="progress-ring">
+                    <svg viewBox="0 0 80 80">
+                        <circle class="bg" cx="40" cy="40" r="35" />
+                        <circle class="fg progress-ring-circle" cx="40" cy="40" r="35" data-percent="80" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Microsoft Excel -->
+            <div class="skill-card hover-target">
+                <svg class="skill-icon" viewBox="0 0 384 512">
+                    <path d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm86.6 200.7L128 244.8l-22.6-44.1h-28.7l36 62.8-38.5 62.9H103l24.2-46.4 24.2 46.4h29.1l-38.5-62.9 36-62.8H150.6zm57.4 0v125.7h-26V200.7h26zm66 0v18.6H226v107.1h-23V219.3h-17.3v-18.6H274z"/>
+                </svg>
+                <div class="skill-name">Microsoft Excel</div>
+                <div class="progress-ring">
+                    <svg viewBox="0 0 80 80">
+                        <circle class="bg" cx="40" cy="40" r="35" />
+                        <circle class="fg progress-ring-circle" cx="40" cy="40" r="35" data-percent="80" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Google Docs -->
+            <div class="skill-card hover-target">
+                <svg class="skill-icon" viewBox="0 0 384 512">
+                    <path d="M48 448V64c0-8.8 7.2-16 16-16H224v80c0 17.7 14.3 32 32 32h80V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16zM64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V154.5c0-17-6.7-33.3-18.7-45.3L274.7 18.7C262.7 6.7 246.5 0 229.5 0H64zm56 256c0-8.8 7.2-16 16-16h128c8.8 0 16 7.2 16 16s-7.2 16-16 16H136c-8.8 0-16-7.2-16-16zm0 64c0-8.8 7.2-16 16-16h128c8.8 0 16 7.2 16 16s-7.2 16-16 16H136c-8.8 0-16-7.2-16-16zm0 64c0-8.8 7.2-16 16-16h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H136c-8.8 0-16-7.2-16-16z"/>
+                </svg>
+                <div class="skill-name">Google Docs</div>
+                <div class="progress-ring">
+                    <svg viewBox="0 0 80 80">
+                        <circle class="bg" cx="40" cy="40" r="35" />
+                        <circle class="fg progress-ring-circle" cx="40" cy="40" r="35" data-percent="80" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Photography -->
+            <div class="skill-card hover-target">
+                <svg class="skill-icon" viewBox="0 0 512 512">
+                    <path d="M149.1 64.8L138.7 96H64C28.7 96 0 124.7 0 160V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H373.3L362.9 64.8C356.4 45.2 338.1 32 317.4 32H194.6c-20.7 0-39 13.2-45.5 32.8zM256 192a96 96 0 1 1 0 192 96 96 0 1 1 0-192z"/>
+                </svg>
+                <div class="skill-name">Photography</div>
+                <div class="progress-ring">
+                    <svg viewBox="0 0 80 80">
+                        <circle class="bg" cx="40" cy="40" r="35" />
+                        <circle class="fg progress-ring-circle" cx="40" cy="40" r="35" data-percent="85" />
+                    </svg>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <!-- Projects Section -->
+    <section id="projects">
+        <h2 class="section-title reveal">My<span>Projects</span></h2>
+        <div class="projects-container reveal">
+            <!-- Project 1 -->
+            <div class="project-card hover-target"
+                style="background-image: url('https://plus.unsplash.com/premium_photo-1681297598822-baae8ee7a126?auto=format&fit=crop&w=600&q=80')">
+                <div class="project-info">
+                    <h3 class="project-title">BookShelf</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">HTML</span>
+                        <span class="project-tag">CSS</span>
+                        <span class="project-tag">JS</span>
+                    </div>
+                    <a href="https://thabinamalika.github.io/BookShelfProject/" target="_blank" class="project-link">View
+                        Project &rarr;</a>
+                </div>
+            </div>
+            <!-- Project 2 -->
+            <div class="project-card hover-target"
+                style="background-image: url('https://images.unsplash.com/photo-1616469829581-73993eb86b02?auto=format&fit=crop&w=600&q=80')">
+                <div class="project-info">
+                    <h3 class="project-title">Nailong Landing Page</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">HTML</span>
+                        <span class="project-tag">CSS</span>
+                        <span class="project-tag">JS</span>
+                    </div>
+                    <a href="https://thabinamalika.github.io/index-nailong2/" target="_blank" class="project-link">View
+                        Project &rarr;</a>
+                </div>
+            </div>
+            <!-- Project 3 -->
+            <div class="project-card hover-target"
+                style="background-image: url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80')">
+                <div class="project-info">
+                    <h3 class="project-title">Payment Calculator</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">HTML</span>
+                        <span class="project-tag">CSS</span>
+                        <span class="project-tag">JavaScript</span>
+                    </div>
+                    <a href="https://thabinamalika.github.io/Hitung_Pembayaran/" target="_blank"
+                        class="project-link">View Project &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Project 4 -->
+            <div class="project-card hover-target"
+                style="background-image: url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80')">
+                <div class="project-info">
+                    <h3 class="project-title">Personal Notes API</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">HTML</span>
+                        <span class="project-tag">CSS</span>
+                        <span class="project-tag">JavaScript</span>
+                    </div>
+                    <a href="https://thabinamalika.github.io/personal-notes-api/" target="_blank"
+                        class="project-link">View Project &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <h2 class="section-title reveal">Contact<span>Me</span></h2>
+        <div class="contact-container reveal">
+            <div class="contact-header">
+                <p style="color: var(--muted); font-size: 1.1rem;">Have a project in mind, or just want to collaborate?
+Don't hesitate to get in touch.</p>
+            </div>
+
+            <div class="contact-links">
+                <a href="mailto:thabinamlika15@gmail.com" class="social-icon hover-target">
+                    <!-- Email Icon -->
+                    <svg viewBox="0 0 512 512">
+                        <path
+                            d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/malikathabinaa/" target="_blank" class="social-icon hover-target">
+                    <!-- Instagram Icon -->
+                    <svg viewBox="0 0 448 512">
+                        <path
+                            d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
+                    </svg>
+                </a>
+                <a href="https://www.linkedin.com/in/malika-thabina-hidayat-b3a4743a0/" target="_blank"
+                    class="social-icon hover-target">
+                    <!-- LinkedIn Icon -->
+                    <svg viewBox="0 0 448 512">
+                        <path
+                            d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z" />
+                    </svg>
+                </a>
+                <a href="https://github.com/thabinamalika" target="_blank" class="social-icon hover-target">
+                    <!-- GitHub Icon -->
+                    <svg viewBox="0 0 496 512">
+                        <path
+                            d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z" />
+                    </svg>
+                </a>
+            </div>
+
+            <form class="contact-form">
+                <div class="input-group">
+                    <input type="text" id="name" required class="hover-target">
+                    <label for="name">Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" required class="hover-target">
+                    <label for="email">Email</label>
+                </div>
+                <div class="input-group">
+                    <textarea id="message" rows="4" required class="hover-target"></textarea>
+                    <label for="message">Message</label>
+                </div>
+                <button type="submit" class="contact-btn hover-target">Kirim Pesan</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-divider"></div>
+        <p>&copy;
+            <script>document.write(new Date().getFullYear())</script> Malika Thabina Hidayat. Built with passion & pure
+            code.
+        </p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Theme Toggle ---
+            const themeBtn = document.getElementById('theme-btn');
+            const iconMoon = document.querySelector('.icon-moon');
+            const iconSun = document.querySelector('.icon-sun');
+            let isLight = false;
+
+            themeBtn.addEventListener('click', () => {
+                isLight = !isLight;
+                if (isLight) {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    iconMoon.style.display = 'none';
+                    iconSun.style.display = 'block';
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    iconMoon.style.display = 'block';
+                    iconSun.style.display = 'none';
+                }
+            });
+
+            // --- Custom Cursor ---
+            const dot = document.querySelector('.cursor-dot');
+            const ring = document.querySelector('.cursor-ring');
+            let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+            if (window.innerWidth > 900) {
+                document.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX; mouseY = e.clientY;
+                    dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+                });
+                function animateRing() {
+                    ringX += (mouseX - ringX) * 0.2;
+                    ringY += (mouseY - ringY) * 0.2;
+                    ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+                    requestAnimationFrame(animateRing);
+                }
+                animateRing();
+
+                const hoverTargets = document.querySelectorAll('.hover-target');
+                hoverTargets.forEach(target => {
+                    target.addEventListener('mouseenter', () => {
+                        ring.style.width = '60px'; ring.style.height = '60px';
+                        ring.style.borderColor = 'var(--gold)'; ring.style.background = 'rgba(201,168,76,0.1)';
+                    });
+                    target.addEventListener('mouseleave', () => {
+                        ring.style.width = '40px'; ring.style.height = '40px';
+                        ring.style.borderColor = 'var(--cyan)'; ring.style.background = 'transparent';
+                    });
+                });
+            }
+
+            // --- Loading Screen ---
+            const loader = document.getElementById('loader');
+            const progressBar = document.querySelector('.progress-bar');
+            setTimeout(() => { progressBar.style.width = '100%'; }, 100);
+            setTimeout(() => { loader.classList.add('hidden'); }, 1500);
+
+            // --- Navbar Scroll & Mobile Menu ---
+            const nav = document.querySelector('nav');
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) nav.classList.add('scrolled');
+                else nav.classList.remove('scrolled');
+            });
+
+            if (hamburger) {
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    navLinks.classList.toggle('active');
+                });
+            }
+
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            // --- Canvas Particles ---
+            const canvas = document.getElementById('hero-particles');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+
+            function initCanvas() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', initCanvas);
+            initCanvas();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * 0.8;
+                    this.vy = (Math.random() - 0.5) * 0.8;
+                    this.radius = Math.random() * 2 + 0.5;
+                }
+                update() {
+                    this.x += this.vx; this.y += this.vy;
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    // Use CSS variable color via logic? Just hardcode cyan alpha
+                    ctx.fillStyle = 'rgba(0, 204, 255, 0.4)';
+                    ctx.fill();
+                }
+            }
+            for (let i = 0; i < 60; i++) particles.push(new Particle());
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => { p.update(); p.draw(); });
+
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 150) {
+                            ctx.beginPath();
+                            // If light mode, make lines visible but subtle
+                            let alpha = 1 - dist / 150;
+                            ctx.strokeStyle = isLight ? `rgba(168, 118, 42, ${alpha * 0.5})` : `rgba(201, 168, 76, ${alpha})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(animateParticles);
+            }
+            if (window.innerWidth > 768) { animateParticles(); }
+
+            // --- Typewriter Effect ---
+            const titles = ["Junior Web Developer.", "HTML & CSS Enthusiast.", "JavaScript Learner."];
+            let titleIndex = 0, charIndex = 0, isDeleting = false;
+            const typewriterElement = document.querySelector('.typewriter');
+
+            function type() {
+                const currentTitle = titles[titleIndex];
+                if (isDeleting) charIndex--;
+                else charIndex++;
+
+                typewriterElement.textContent = currentTitle.substring(0, charIndex);
+
+                let typeSpeed = isDeleting ? 40 : 80;
+
+                if (!isDeleting && charIndex === currentTitle.length) {
+                    typeSpeed = 2000; isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false; titleIndex = (titleIndex + 1) % titles.length;
+                    typeSpeed = 500;
+                }
+                setTimeout(type, typeSpeed);
+            }
+            setTimeout(type, 1600);
+
+            // --- Intersection Observer (Reveals & Counters) ---
+            const observerOptions = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+
+                        // Skill Progress Rings
+                        if (entry.target.classList.contains('progress-ring-circle')) {
+                            const percent = entry.target.dataset.percent;
+                            const circumference = 219.9; // 2 * PI * 35
+                            const offset = circumference - (circumference * percent / 100);
+                            entry.target.style.strokeDashoffset = offset;
+                        }
+
+                        // Footer Divider
+                        if (entry.target.classList.contains('footer-divider')) {
+                            entry.target.classList.add('visible');
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal, .progress-ring-circle, .footer-divider').forEach(el => {
+                observer.observe(el);
+            });
+
+            // --- Horizontal Drag-to-Scroll for Projects ---
+            const slider = document.querySelector('.projects-container');
+            let isDown = false;
+            let startX, scrollLeft;
+
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true; slider.style.cursor = 'grabbing';
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+            });
+            slider.addEventListener('mouseleave', () => { isDown = false; slider.style.cursor = 'grab'; });
+            slider.addEventListener('mouseup', () => { isDown = false; slider.style.cursor = 'grab'; });
+            slider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 2; // scroll speed
+                slider.scrollLeft = scrollLeft - walk;
+            });
+
+            // Prevent default form submission
+            document.querySelector('.contact-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button');
+                const origText = btn.textContent;
+                btn.textContent = "Sent successfully!";
+                btn.style.background = "var(--cyan)";
+                setTimeout(() => {
+                    btn.textContent = origText;
+                    btn.style.background = ""; // Reset to default CSS
+                    e.target.reset();
+                }, 3000);
+            });
+
+            // --- Hero Parallax Effect ---
+            window.addEventListener('scroll', () => {
+                if (window.innerWidth > 900) {
+                    const scrolled = window.pageYOffset;
+                    const heroText = document.querySelector('.hero-text');
+                    const heroImg = document.querySelector('.hero-image');
+                    if (heroText && heroImg && scrolled < window.innerHeight) {
+                        heroText.style.transform = `translateY(${scrolled * 0.4}px)`;
+                        heroImg.style.transform = `translateY(${scrolled * 0.2}px)`;
+                    }
+                }
+            });
+
+        });
+    </script>
+</body>
+
+</html>

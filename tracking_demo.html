@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tracking Modal</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+        background-color: #f0f0f0; /* Simulate page background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Transparent black overlay */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #ffffff;
+        width: 90%;
+        max-width: 500px;
+        min-height: 480px;
+        border-radius: 20px; /* Besar */
+        padding: 40px;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal-content {
+        transform: translateY(0);
+    }
+
+    /* Close Button */
+    .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #888;
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+
+    .close-btn:hover {
+        color: #333;
+    }
+
+    /* Title */
+    .modal-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #111;
+        margin-bottom: 50px;
+        text-align: center;
+    }
+
+    /* Timeline Container */
+    .timeline {
+        position: relative;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Background Line */
+    .timeline::before {
+        content: '';
+        position: absolute;
+        top: 10px; /* Adjust to center of first dot */
+        bottom: 50px; /* Adjust to center of last dot */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 3px;
+        background-color: #e0e0e0; /* abu muda */
+        z-index: 1;
+    }
+
+    /* Progress Line */
+    .timeline-progress {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 3px;
+        background-color: #d32f2f; /* merah */
+        z-index: 2;
+        height: 0%; /* Will be animated via JS */
+        transition: height 1s ease-in-out;
+    }
+
+    /* Step Item */
+    .timeline-step {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 60px; /* Spacing between steps */
+        z-index: 3;
+    }
+
+    .timeline-step:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Dot */
+    .step-dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #e0e0e0;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: background-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .timeline-step.active .step-dot {
+        background-color: #d32f2f;
+        box-shadow: 0 0 10px rgba(211, 47, 47, 0.5); /* Glow halus */
+    }
+
+    /* Text Container */
+    .step-content {
+        position: absolute;
+        width: 200px;
+        top: -5px; /* align with dot */
+    }
+
+    /* Specific alignments */
+    .step-1 .step-content {
+        right: 50%;
+        margin-right: 30px;
+        text-align: right;
+    }
+
+    .step-2 .step-content {
+        left: 50%;
+        margin-left: 30px;
+        text-align: left;
+    }
+
+    .step-3 .step-content {
+        top: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    /* Texts */
+    .step-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #111;
+        margin-bottom: 4px;
+        transition: color 0.3s ease;
+    }
+
+    .step-subtitle {
+        font-size: 11px;
+        color: #888;
+        font-weight: 400;
+    }
+
+    .timeline-step.active .step-title {
+        color: #d32f2f; /* Make text red when active? Screenshot shows black text actually */
+    }
+
+</style>
+</head>
+<body>
+
+    <button onclick="openModal()" style="padding: 10px 20px; cursor: pointer;">Show Tracking Modal</button>
+
+    <div class="modal-overlay" id="trackingModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h2 class="modal-title">Lacak pesanan anda</h2>
+
+            <div class="timeline">
+                <div class="timeline-progress" id="progressLine"></div>
+
+                <div class="timeline-step step-1" id="step1">
+                    <div class="step-dot"></div>
+                    <div class="step-content">
+                        <div class="step-title" style="color:#000;">Pesanan Telah Dikonfirmasi</div>
+                        <div class="step-subtitle">( Pesanan sedang diproses )</div>
+                    </div>
+                </div>
+
+                <div class="timeline-step step-2" id="step2">
+                    <div class="step-dot"></div>
+                    <div class="step-content">
+                        <div class="step-title" style="color:#000;">Pesanan sudah siap</div>
+                        <div class="step-subtitle">( Pesanan akan diantarkan )</div>
+                    </div>
+                </div>
+
+                <div class="timeline-step step-3" id="step3">
+                    <div class="step-dot"></div>
+                    <div class="step-content">
+                        <div class="step-title" style="color:#000;">Pesanan selesai</div>
+                        <div class="step-subtitle">( pesanan telah di sajikan )</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('trackingModal').classList.add('active');
+            startTracking();
+        }
+
+        function closeModal() {
+            document.getElementById('trackingModal').classList.remove('active');
+            resetTracking();
+        }
+
+        let trackingInterval;
+
+        function resetTracking() {
+            clearInterval(trackingInterval);
+            document.getElementById('progressLine').style.height = '0%';
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.remove('active');
+        }
+
+        function startTracking() {
+            resetTracking();
+            
+            let currentStep = 1;
+            const progressLine = document.getElementById('progressLine');
+            const totalSteps = 3;
+
+            // Wait a bit before starting
+            setTimeout(() => {
+                updateStep(currentStep);
+
+                trackingInterval = setInterval(() => {
+                    currentStep++;
+                    if (currentStep <= totalSteps) {
+                        updateStep(currentStep);
+                    } else {
+                        clearInterval(trackingInterval);
+                    }
+                }, 2000); // Change status every 2 seconds
+            }, 500);
+        }
+
+        function updateStep(step) {
+            document.getElementById(`step${step}`).classList.add('active');
+            
+            // Calculate height for progress line
+            // Step 1: 0% height (or a tiny bit just to cover the dot)
+            // Step 2: 50% height
+            // Step 3: 100% height
+            
+            let heightPercent = 0;
+            if (step === 1) heightPercent = 0;
+            else if (step === 2) heightPercent = 50;
+            else if (step === 3) heightPercent = 100;
+            
+            document.getElementById('progressLine').style.height = `${heightPercent}%`;
+        }
+        
+        // Auto open for demo purposes
+        window.onload = () => {
+            openModal();
+        }
+    </script>
+</body>
+</html>
